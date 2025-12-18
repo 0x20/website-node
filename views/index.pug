@@ -1,0 +1,66 @@
+doctype html
+html(lang="en")
+  include partials/head
+  body
+    #space-open-banner.space-open-banner.hidden
+      .banner-content
+        span.banner-text SPACE IS OPEN /// SPACE IS OPEN /// SPACE IS OPEN /// SPACE IS OPEN /// SPACE IS OPEN /// SPACE IS OPEN /// SPACE IS OPEN /// SPACE IS OPEN /// SPACE IS OPEN /// SPACE IS OPEN /// SPACE IS OPEN /// SPACE IS OPEN /// SPACE IS OPEN /// SPACE IS OPEN /// SPACE IS OPEN /// SPACE IS OPEN ///
+    .wrapper
+      include partials/header
+      .container
+        .row
+          .col-xl-8.col-md-12
+            h1 A place to call home
+            p.notframed
+              | Hackerspace Gent (0x20) is a hackerspace in the wonderful city of Ghent, Belgium. It is a
+              | physical space run by a group of people dedicated to various aspects of constructive & creative
+              | tinkering.
+              br
+              br
+              | Don't worry, we won't break into your computer. The hacker subculture consists of, but is not
+              | limited to: computing, networking, programming, music, gaming, electronics, lock picking,
+              | woodworking, robotics, science fiction... However, the defining characteristic of a hacker is
+              | not the activities performed themselves, but the manner in which it is done. A hacker is someone
+              | who invents, constructs, learns, shares, trains basic skills and is willing to think outside the
+              | box to find a creative solution to a problem.
+              br
+              br
+              i
+                | Note: While we are always aiming to be constructive, there is a group of people who loudly
+                | call themselves hackers, but have a different motivation. Unfortunately, some media have
+                | been using the word 'hacker' to describe people we do not necessarily agree with.
+          .col-xl-4.col-md-12
+            h1 Events
+            p#upcomingEvents.framed
+              //- Script should add upcoming events here
+            h1 Past Events
+            p#pastEvents.framed
+              //- Script should add past events here
+        .row
+          .col-12
+            img.img(src="/images/space-new.jpg" style="width:100%;")
+          .col-12
+            h1 Online tools
+          .col-xl-4.col-lg-6.col-md-12(style="margin-bottom:25px;")
+            .framed(style="height:100%;")
+              h2
+                a(href="https://pad.hackerspace.gent") pad.hackerspace.gent
+              p
+                | A real-time collaborative text editor, where you can make "pads" in which you can type text
+                | that will be immediatly synchronised to other or future readers of that pad.
+          .col-xl-4.col-lg-6.col-md-12(style="margin-bottom:25px;")
+            .framed(style="height:100%;")
+              h2
+                a(href="https://docs.hackerspace.gent") docs.hackerspace.gent
+              p
+                | Our shiny new wiki, barely in use at the moment, but a nice way of documenting something in a readable and
+                | recognisable format.
+          .col-xl-4.col-lg-6.col-md-12(style="margin-bottom:25px;")
+            .framed(style="height:100%;")
+              h2
+                a(href="https://hackerspace.design/") hackerspace.design
+              p
+                | The Hackerspace Blueprint is a living document which explains how our community works.
+                | Designed to give power to the people who do stuff.
+        include partials/footer
+    script(type="module" src="/js/home.js")

@@ -1,0 +1,53 @@
+doctype html
+html(lang="en")
+  include partials/head
+  body
+    .wrapper
+      include partials/header
+      .container
+        .row
+          .col-xl-8.col-md-12
+            .not-framed.mb-2
+              h1
+                span
+                  colored Space status:
+                  colored#status loading...
+              p
+                | We hold a weekly social every thursday during which the space is open to visitors.
+                br
+                | Usually people start arriving at 21h00m.
+                br
+                br
+                | We are located at the #[colored Stadsmakers, Wiedauwkaai 51]. Enter through the gate
+                | and follow the road to the parking. Take the stairs on your left to
+                | enter the building. The space is opposite the main entrance behind the glass door.
+                | If the gate is closed you can ring the space phone at
+                | #[a(href="tel:0032456870215") #[b +32 456 87 02 15]].
+                | The phone is physically in the space so if we're closed no one will answer.
+              //- button.btn.mt-3(type="button" onclick="window.location.href='https://www.youtube.com/watch?v=xvFZjo5PgG0';") Press to ring bell
+              img.img-fluid(src="/images/contact/map.png" alt="Map" width="400em")
+              br
+              small
+                a(href="https://www.openstreetmap.org/node/10779879231") View Larger Map
+          .col-xl-4.col-md-12
+            h1 Contact information
+            | #[colored Address:] #[a(href="https://www.openstreetmap.org/node/10779879231") Wiedauwkaai 51, 9000 Gent]
+            br
+            | #[colored Email:] #[a(href="mailto:info@hackerspace.gent") info@hackerspace.gent]
+            br
+            | #[colored Instagram:] #[a(href="https://www.instagram.com/hackerspace.gent/") hackerspace.gent]
+            br
+            | #[colored Matrix:] #[a(href="https://matrix.to/#/#hackerspacegent:matrix.org") #hackerspacegent:matrix.org]
+            br
+            | #[colored Mattermost:] #[a(href="https://chat.hackerspace.gent") chat.hackerspace.gent]
+            br
+            | #[colored Mastodon:] #[a(href="https://chaos.social/@hsg")  @hsg@chaos.social]
+            br
+            | #[colored Twitter:] #[a(href="https://twitter.com/hsghent") @hsghent]
+            br
+            | #[colored Github:] #[a(href="https://github.com/0x20/") https://github.com/0x20/]
+            br
+            | #[colored Bank:] IBAN: BE68 7310 5962 2134 BIC: KREDBEBB
+            br
+            | #[colored Phone number:] #[a(href="tel:0032456870215") +32 456 87 02 15] (only when the space is open)
+    script(defer src="/js/contact.js")
