@@ -8,8 +8,9 @@ This is a Node.js/Express port of the Hackerspace Gent website.
 - Events page with detailed event listings
 - Contact page with space information and status
 - Dynamic navigation
-- ICS calendar integration
+- Server-side ICS calendar fetching with 1-hour caching
 - Space status API integration
+- No GitHub Actions required - calendar updates automatically
 
 ## Installation
 
@@ -39,8 +40,7 @@ website-node/
 │   ├── css/            # Stylesheets
 │   ├── js/             # Client-side JavaScript
 │   │   └── modules/    # JavaScript modules
-│   ├── images/         # Images and media
-│   └── calendar.ics    # Events calendar
+│   └── images/         # Images and media
 ├── views/              # Pug templates
 │   ├── partials/       # Reusable template parts
 │   ├── index.pug       # Home page
@@ -55,7 +55,15 @@ website-node/
 - `/` - Home page
 - `/events` - Events page
 - `/contact` - Contact page
-- `/calendar.ics` - Calendar file
+- `/calendar.ics` - Calendar file (fetched from Google Calendar, cached for 1 hour)
+
+## Calendar System
+
+The website automatically fetches events from the Google Calendar:
+- **Source:** `https://calendar.google.com/calendar/ical/info@hackerspace.gent/public/basic.ics`
+- **Caching:** Events are cached server-side for 1 hour
+- **Fallback:** If Google Calendar is unavailable, stale cache is served
+- **No maintenance:** No GitHub Actions or cron jobs needed!
 
 ## Technologies Used
 
