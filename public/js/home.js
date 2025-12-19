@@ -1,4 +1,5 @@
 import { fetchEvents, getLocalIsoString } from "./modules/ics-loader.js";
+import { categorizeEvents, deduplicateRecurringEvents } from "./modules/event-utils.js";
 
 const icsEndpoint  = '/calendar.ics';
 
@@ -44,36 +45,26 @@ updateSpaceStatusBanner();
 //Adds events to homepage
 async function processEvents(url){
     const events = await fetchEvents(url);
-    
-    // Categorize events into future and past using reduce
-    const now = new Date();
-    const { futureEvents, pastEvents } = events.reduce((acc, event) => {
-        if (event.start) {
-            const eventDate = new Date(event.start);
-            if (eventDate > now) 
-                acc.futureEvents.push(event);
-            else if (eventDate < now) 
-                acc.pastEvents.push(event);
-        }
-        return acc;
-    }, { futureEvents: [], pastEvents: [] });
+
+    // Categorize events into future and past
+    let { futureEvents, pastEvents } = categorizeEvents(events);
+
+    // Deduplicate future events (only show next occurrence of recurring events)
+    futureEvents = deduplicateRecurringEvents(futureEvents);
 
     // Process future events
     const closestFutureEvents = futureEvents
-        .sort((a, b) => new Date(a.start) - new Date(b.start)) // Sort by start date
-        .slice(0, 5); // Get the closest 5 future events
+        .sort((a, b) => new Date(a.start) - new Date(b.start))
+        .slice(0, 5);
 
     // Process past events
     const recentPastEvents = pastEvents
-        .sort((a, b) => new Date(b.start) - new Date(a.start)) // Sort by start date
-        .slice(0, 5); // Get the last 5 most recent past events
+        .sort((a, b) => new Date(b.start) - new Date(a.start))
+        .slice(0, 10);
 
     // Add events to HTML
-    const upcomingEventsList = document.getElementById('upcomingEvents');
-    const pastEventsList = document.getElementById('pastEvents');
-
-    addEvents(upcomingEventsList, closestFutureEvents);
-    addEvents(pastEventsList, recentPastEvents);
+    addEvents(document.getElementById('upcomingEvents'), closestFutureEvents);
+    addEvents(document.getElementById('pastEvents'), recentPastEvents);
 }
 
 function addEvents(target, events) {

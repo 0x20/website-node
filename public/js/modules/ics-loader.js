@@ -14,18 +14,62 @@ async function fetchEvents(filePath) {
     } catch (ex) {
         console.log("Parsing failed");
         console.log(ex.message);
-        return; // Early return if parsing fails
+        return []; // Return empty array if parsing fails
     }
 
-    const events = vevents.map(event => ({
-        summary: event.getFirstPropertyValue('summary'),
-        start: event.getFirstPropertyValue('dtstart'),
-        end: event.getFirstPropertyValue('dtend'),
-        uid: event.getFirstPropertyValue('uid').split('@')[0],
-        description: event.getFirstPropertyValue('description'),
-    }));
+    const allEvents = [];
 
-    return events;
+    // Expand events to show occurrences in a time range
+    // Show 6 months in the past and 6 months in the future
+    const rangeStart = new Date();
+    rangeStart.setMonth(rangeStart.getMonth() - 6);
+    const rangeEnd = new Date();
+    rangeEnd.setMonth(rangeEnd.getMonth() + 6);
+
+    vevents.forEach(vevent => {
+        const event = new ICAL.Event(vevent);
+
+        // Check if event is recurring
+        if (event.isRecurring()) {
+            // Expand recurring event within time range
+            const expand = event.iterator();
+            let next;
+            let occurrenceCount = 0;
+
+            while ((next = expand.next())) {
+                const occurrence = next.toJSDate();
+
+                // Stop if we're past the range
+                if (occurrence > rangeEnd) break;
+
+                // Only add if within range
+                if (occurrence >= rangeStart) {
+                    allEvents.push({
+                        summary: event.summary,
+                        start: occurrence,
+                        end: event.endDate ? event.endDate.toJSDate() : null,
+                        uid: event.uid.split('@')[0] + '-' + occurrence.getTime(),
+                        description: event.description,
+                    });
+                }
+
+                // Safety limit: max 200 occurrences per event to prevent infinite loops
+                occurrenceCount++;
+                if (occurrenceCount > 200) break;
+            }
+        } else {
+            // Single event (non-recurring)
+            allEvents.push({
+                summary: event.summary,
+                start: event.startDate ? event.startDate.toJSDate() : null,
+                end: event.endDate ? event.endDate.toJSDate() : null,
+                uid: event.uid.split('@')[0],
+                description: event.description,
+            });
+        }
+    });
+
+    return allEvents;
 }
 
 //Use this function to see when the server was last update
