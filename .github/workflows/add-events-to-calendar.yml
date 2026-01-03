@@ -1,0 +1,48 @@
+name: Add Events to Calendar
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'events/*.md'
+
+jobs:
+  add-to-calendar:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 2
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+
+    - name: Install dependencies
+      run: npm install
+
+    - name: Create secrets directory
+      run: mkdir -p secrets
+
+    - name: Create service account key file
+      run: echo '${{ secrets.GOOGLE_SERVICE_ACCOUNT_KEY }}' > secrets/idyllic-unity-449600-g4-471be9f570db.json
+
+    - name: Get changed markdown files
+      id: changed-files
+      run: |
+        FILES=$(git diff --name-only HEAD^ HEAD | grep '^events/.*\.md$' || true)
+        echo "files=$FILES" >> $GITHUB_OUTPUT
+        echo "Changed files: $FILES"
+
+    - name: Add events to calendar
+      if: steps.changed-files.outputs.files != ''
+      run: |
+        for file in ${{ steps.changed-files.outputs.files }}; do
+          if [ -f "$file" ]; then
+            echo "Processing $file..."
+            node scripts/calender-add-post-from-md.js "$file"
+          fi
+        done
