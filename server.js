@@ -1,6 +1,8 @@
 const express = require('express');
 const path = require('path');
 const https = require('https');
+const fs = require('fs').promises;
+const matter = require('gray-matter');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -65,6 +67,7 @@ app.get('/calendar.ics', async (req, res) => {
     if (calendarCache.data && (now - calendarCache.lastFetch) < CACHE_DURATION) {
       console.log('Serving cached calendar');
       res.set('Content-Type', 'text/calendar; charset=utf-8');
+      res.set('Last-Modified', new Date(calendarCache.lastFetch).toUTCString());
       return res.send(calendarCache.data);
     }
 
@@ -77,6 +80,7 @@ app.get('/calendar.ics', async (req, res) => {
     calendarCache.lastFetch = now;
 
     res.set('Content-Type', 'text/calendar; charset=utf-8');
+    res.set('Last-Modified', new Date(now).toUTCString());
     res.send(data);
   } catch (error) {
     console.error('Error fetching calendar:', error);
@@ -85,10 +89,88 @@ app.get('/calendar.ics', async (req, res) => {
     if (calendarCache.data) {
       console.log('Serving stale cache due to error');
       res.set('Content-Type', 'text/calendar; charset=utf-8');
+      res.set('Last-Modified', new Date(calendarCache.lastFetch).toUTCString());
       return res.send(calendarCache.data);
     }
 
     res.status(500).send('Error fetching calendar');
+  }
+});
+
+// Parse and serve markdown events from /events folder
+app.get('/api/events.json', async (req, res) => {
+  try {
+    const eventsDir = path.join(__dirname, 'events');
+    const files = await fs.readdir(eventsDir);
+
+    // Filter only .md files (exclude README)
+    const mdFiles = files.filter(file =>
+      file.endsWith('.md') && file.toLowerCase() !== 'readme.md'
+    );
+
+    const events = [];
+
+    for (const file of mdFiles) {
+      const filePath = path.join(eventsDir, file);
+      const fileContent = await fs.readFile(filePath, 'utf8');
+
+      // Parse frontmatter
+      const { data, content } = matter(fileContent);
+
+      // Validate required fields
+      if (!data.title || !data.date) {
+        console.warn(`Skipping ${file}: missing required fields (title, date)`);
+        continue;
+      }
+
+      // Handle recurring events
+      if (data.recurring && data.recurring !== 'false') {
+        // Generate occurrences for the next 6 months
+        const startDate = new Date(data.date);
+        const endRange = new Date();
+        endRange.setMonth(endRange.getMonth() + 6);
+
+        let currentDate = new Date(startDate);
+        let occurrenceCount = 0;
+
+        while (currentDate <= endRange && occurrenceCount < 52) {
+          events.push({
+            title: data.title,
+            date: currentDate.toISOString(),
+            end: data.end ? new Date(new Date(data.end).getTime() + (currentDate - startDate)).toISOString() : null,
+            description: content.trim(),
+            uid: `md-${file.replace('.md', '')}-${currentDate.getTime()}`,
+            source: 'markdown'
+          });
+
+          // Increment based on recurrence
+          if (data.recurring === 'weekly') {
+            currentDate.setDate(currentDate.getDate() + 7);
+          } else if (data.recurring === 'monthly') {
+            currentDate.setMonth(currentDate.getMonth() + 1);
+          } else {
+            break; // Unknown recurrence type
+          }
+
+          occurrenceCount++;
+        }
+      } else {
+        // One-time event
+        events.push({
+          title: data.title,
+          date: data.date,
+          end: data.end || null,
+          description: content.trim(),
+          uid: `md-${file.replace('.md', '')}`,
+          source: 'markdown'
+        });
+      }
+    }
+
+    res.json(events);
+  } catch (error) {
+    console.error('Error reading markdown events:', error);
+    res.status(500).json({ error: 'Failed to load markdown events' });
   }
 });
 

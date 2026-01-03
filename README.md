@@ -57,13 +57,23 @@ website-node/
 - `/contact` - Contact page
 - `/calendar.ics` - Calendar file (fetched from Google Calendar, cached for 1 hour)
 
-## Calendar System
+## Event System
 
-The website automatically fetches events from the Google Calendar:
+The website displays events from two sources:
+
+### 1. Google Calendar (ICS)
 - **Source:** `https://calendar.google.com/calendar/ical/info@hackerspace.gent/public/basic.ics`
 - **Caching:** Events are cached server-side for 1 hour
 - **Fallback:** If Google Calendar is unavailable, stale cache is served
 - **No maintenance:** No GitHub Actions or cron jobs needed!
+
+### 2. Markdown Files (NEW!)
+- **Location:** `/events/` folder
+- **Format:** Markdown files with YAML frontmatter
+- **Access:** Anyone can add events via Pull Request - no calendar access needed!
+- **See:** `/events/README.md` for format and examples
+
+Events from both sources are automatically merged and displayed together.
 
 ## Technologies Used
 

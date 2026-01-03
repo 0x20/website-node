@@ -2,6 +2,30 @@ export {fetchEvents, getLastModified, getLocalIsoString}
 
 import ICAL from "https://unpkg.com/ical.js/dist/ical.min.js";
 
+// Fetch markdown events from server
+async function fetchMarkdownEvents() {
+    try {
+        const response = await fetch('/api/events.json');
+        if (!response.ok) {
+            console.error('Failed to fetch markdown events');
+            return [];
+        }
+        const mdEvents = await response.json();
+
+        // Convert to our event format
+        return mdEvents.map(event => ({
+            summary: event.title,
+            start: new Date(event.date),
+            end: event.end ? new Date(event.end) : null,
+            uid: event.uid,
+            description: event.description
+        }));
+    } catch (error) {
+        console.error('Error fetching markdown events:', error);
+        return [];
+    }
+}
+
 async function fetchEvents(filePath) {
     const response = await fetch(filePath);
     const data = await response.text();
@@ -68,6 +92,10 @@ async function fetchEvents(filePath) {
             });
         }
     });
+
+    // Fetch and merge markdown events
+    const mdEvents = await fetchMarkdownEvents();
+    allEvents.push(...mdEvents);
 
     return allEvents;
 }

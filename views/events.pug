@@ -12,6 +12,11 @@ html(lang="en")
     .wrapper
       include partials/header
       .container
+        //- How to add events
+        .row.mb-3
+          p
+            | Want to add an event? Create a markdown file in the #[code /events/] folder and submit a PR. See the #[a(href="https://github.com/0x20/website-node/blob/main/events/README.md" target="_blank") events README] for the format and examples.
+
         //- Future events
         .row.mb-5
           h1 Upcoming Events
@@ -22,14 +27,13 @@ html(lang="en")
           h1 Past Events
           #pastEvents.notframed
             | Past events with description and pictures
-        //- Info
+
+        //- Calendar info
         .row
-          h1 Info
-          p
-            | The events on page are automatically pulled from the #[a(href="https://calendar.google.com/calendar/u/0?cid=aW5mb0BoYWNrZXJzcGFjZS5nZW50") google calender] every hour using github-actions.
+          h1 Calendar Info
           span
-            | The latest automatic update happened at:
+            | Events are updated automatically. Latest update:
             |
-            colored#calenderLastUpdated Timestamp of last update
+            colored#calenderLastUpdated loading...
         div(style="height:200px;")
     script(type="module" src="/js/events.js")

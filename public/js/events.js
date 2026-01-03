@@ -26,7 +26,8 @@ async function processEvents(url) {
 function extractImageUrls(description) {
     if(description == null)
         return [];
-    const imageRegex = /(https:\/\/[^\s]+?\.(?:jpg|jpeg|png|gif))/gi;
+    // Match image URLs - either with image extensions or common image hosting patterns
+    const imageRegex = /(https?:\/\/[^\s]+?(?:\.(?:jpg|jpeg|png|gif|webp)|\/\d+\/\d+\?[^\s]*|picsum\.photos[^\s]*))/gi;
     return description.match(imageRegex) || [];
 }
 
@@ -50,13 +51,21 @@ function addPastEvents(target, events) {
                 });
             }
 
+            // Remove image URLs from description text
+            let cleanDescription = event.description;
+            images.forEach(url => {
+                cleanDescription = cleanDescription.replace(url, '');
+            });
+            // Clean up extra whitespace
+            cleanDescription = cleanDescription.trim().replace(/\n{3,}/g, '\n\n');
+
             const eventHTML = `
             <div id=${event.uid} class="framed mb-5">
                 <div class="mb-3">
                     <colored>${eventStr}</colored> - ${event.summary}
                 </div>
                 <div>
-                    <p>${event.description}</p>
+                    <p style="white-space: pre-line;">${cleanDescription}</p>
                     <div>${imagesHTML}</div>
                 </div>
             </div>`;
@@ -98,9 +107,14 @@ function convertDateToStr(eventDate){
 async function setLastUpdatedTimestamp(icsEndpoint) {
     const timeStamp = await getLastModified(icsEndpoint);
     const coloredDiv = document.getElementById("calenderLastUpdated");
-    let [day, hour] = getLocalIsoString(timeStamp).split('T');
-    hour = hour.split('.')[0];
-    coloredDiv.innerHTML = `${day}, ${hour}`;
+
+    if (timeStamp) {
+        let [day, hour] = getLocalIsoString(timeStamp).split('T');
+        hour = hour.split('.')[0];
+        coloredDiv.innerHTML = `${day}, ${hour}`;
+    } else {
+        coloredDiv.innerHTML = 'Unknown';
+    }
 }
 
 function scrollToAnchor() {
