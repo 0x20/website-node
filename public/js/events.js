@@ -1,11 +1,9 @@
-import { fetchEvents, getLastModified, getLocalIsoString } from "./modules/ics-loader.js";
+import { fetchEvents, getLocalIsoString } from "./modules/ics-loader.js";
 import { categorizeEvents, deduplicateRecurringEvents } from "./modules/event-utils.js";
 
-const icsEndpoint = '/calendar.ics';
-
 // Adds events to events page
-async function processEvents(url) {
-    const events = await fetchEvents(url);
+async function processEvents() {
+    const events = await fetchEvents();
 
     // Categorize events into future and past
     let { futureEvents, pastEvents } = categorizeEvents(events);
@@ -104,19 +102,6 @@ function convertDateToStr(eventDate){
     return `${eventDate.getFullYear()}-${String(eventDate.getMonth() + 1).padStart(2, '0')}-${String(eventDate.getDate()).padStart(2, '0')} ${String(eventDate.getHours()).padStart(2, '0')}h${String(eventDate.getMinutes()).padStart(2, '0')}m`;
 }
 
-async function setLastUpdatedTimestamp(icsEndpoint) {
-    const timeStamp = await getLastModified(icsEndpoint);
-    const coloredDiv = document.getElementById("calenderLastUpdated");
-
-    if (timeStamp) {
-        let [day, hour] = getLocalIsoString(timeStamp).split('T');
-        hour = hour.split('.')[0];
-        coloredDiv.innerHTML = `${day}, ${hour}`;
-    } else {
-        coloredDiv.innerHTML = 'Unknown';
-    }
-}
-
 function scrollToAnchor() {
     const hash = window.location.hash;
     if (hash) {
@@ -133,8 +118,7 @@ function scrollToAnchor() {
 }
 
 async function initialize(){
-    await processEvents(icsEndpoint);
-    await setLastUpdatedTimestamp(icsEndpoint);
+    await processEvents();
     scrollToAnchor();
 }
 

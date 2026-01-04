@@ -13,3 +13,11 @@ Creates a calendar event from a markdown file in the events folder.
 ```bash
 node scripts/calender-add-post-from-md.js events/your-event.md
 ```
+
+## `calender-export-to-md.js`
+Exports all upcoming calendar events to markdown files in the events folder.
+
+**Usage:**
+```bash
+node scripts/calender-export-to-md.js
+```

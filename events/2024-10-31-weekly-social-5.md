@@ -1,0 +1,7 @@
+---
+title: Weekly Social #5
+date: 2024-10-31T18:00:00.000Z
+end: 2024-10-31T23:00:00.000Z
+---
+
+Experimenting with a LEGO Dacta control pane from the 90's. <br>Running the CNC machine for the first time to plane some stock (badly). <br><br>Images: <br><a href="https://storage.googleapis.com/hackerspace-website/%20LEGO%20Dacta%20control%20pane.jpg">LEGO Dacta control pane</a><br><a href="https://storage.googleapis.com/hackerspace-website/CNC%20Planing.jpg" target="_blank">CNC Planing</a>
