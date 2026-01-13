@@ -1,5 +1,5 @@
 ---
-title: Pseudo social
+title: LAN party planning
 date: 2026-01-15T20:00:00
 end: 2026-01-15T21:00:00
 ---
