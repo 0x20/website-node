@@ -19,24 +19,21 @@ docker compose up -d --build
 
 ```bash
 # Export calendar events to markdown
-node scripts/calender-export-to-md.js
+node scripts/calendar-export-to-md.js
 
 # Create calendar event from markdown file
-node scripts/calender-add-post-from-md.js events/your-event.md
+node scripts/calendar-add-post-from-md.js events/your-event.md
 ```
 
 ## Architecture
 
 This is a Node.js/Express website for Hackerspace Gent (0x20).
 
-### Event System (Dual Source)
+### Event System
 
-Events come from two sources, merged client-side:
+Events are served from **Markdown files** via `/api/events.json`, parsed in `server.js` using gray-matter.
 
-1. **Google Calendar (ICS)** - Fetched via `public/js/modules/ics-loader.js`, cached 1 hour
-2. **Markdown files** - Served via `/api/events.json`, parsed in `server.js` using gray-matter
-
-Client-side JS modules in `public/js/modules/` handle loading, deduplication, and categorization of events from both sources.
+Client-side JS modules in `public/js/modules/` handle loading, deduplication, and categorization of events.
 
 ### Markdown Event Format
 

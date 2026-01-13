@@ -1,8 +1,6 @@
 import { fetchEvents, getLocalIsoString } from "./modules/event-loader.js";
 import { categorizeEvents, deduplicateRecurringEvents } from "./modules/event-utils.js";
 
-const icsEndpoint  = '/calendar.ics';
-
 // Space status banner functionality
 async function updateSpaceStatusBanner() {
     const banner = document.getElementById('space-open-banner');
@@ -43,8 +41,8 @@ setInterval(updateSpaceStatusBanner, 30000);
 updateSpaceStatusBanner();
 
 //Adds events to homepage
-async function processEvents(url){
-    const events = await fetchEvents(url);
+async function processEvents(){
+    const events = await fetchEvents();
 
     // Categorize events into future and past
     let { futureEvents, pastEvents } = categorizeEvents(events);
@@ -77,4 +75,4 @@ function addEvents(target, events) {
     });
 }
 
-processEvents(icsEndpoint);
+processEvents();

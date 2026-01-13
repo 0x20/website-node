@@ -111,8 +111,8 @@ async function addOrUpdateEventFromMarkdown(filePath) {
 const filePath = process.argv[2];
 
 if (!filePath) {
-  console.error('Usage: node calender-add-post-from-md.js <path-to-markdown-file>');
-  console.error('Example: node calender-add-post-from-md.js ../events/2025-12-30-special-social.md');
+  console.error('Usage: node calendar-add-post-from-md.js <path-to-markdown-file>');
+  console.error('Example: node calendar-add-post-from-md.js ../events/2025-12-30-special-social.md');
   process.exit(1);
 }
 

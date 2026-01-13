@@ -28,8 +28,8 @@ function renderMarkdown(text) {
         const html = marked.parse(text, { async: false });
         // Sanitize with strict allowlist
         return DOMPurify.sanitize(html, {
-            ALLOWED_TAGS: ['p', 'br', 'strong', 'em', 'b', 'i', 'u', 'a', 'ul', 'ol', 'li', 'code', 'pre', 'blockquote', 'h1', 'h2', 'h3', 'hr'],
-            ALLOWED_ATTR: ['href', 'target', 'rel'],
+            ALLOWED_TAGS: ['p', 'br', 'strong', 'em', 'b', 'i', 'u', 'a', 'ul', 'ol', 'li', 'code', 'pre', 'blockquote', 'h1', 'h2', 'h3', 'hr', 'img'],
+            ALLOWED_ATTR: ['href', 'target', 'rel', 'src', 'alt', 'title'],
             ALLOW_DATA_ATTR: false,
             ADD_ATTR: ['rel'],
             FORCE_BODY: true,
