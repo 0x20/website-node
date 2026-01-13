@@ -30,7 +30,7 @@ app.get('/contact', (req, res) => {
 app.get('/api/events.json', async (req, res) => {
   try {
     const eventsDir = path.join(__dirname, 'events');
-    const files = await fs.readdir(eventsDir);
+    const files = await fs.readdir(eventsDir, { recursive: true });
 
     // Filter only .md files (exclude README)
     const mdFiles = files.filter(file =>
