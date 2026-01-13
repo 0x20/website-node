@@ -1,6 +1,6 @@
 ---
 title: Weekly Social
-date: 2025-12-19T21:00:00
+date: 2026-01-08T21:00:00
 recurring: weekly
 ---
 
