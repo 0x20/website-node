@@ -1,4 +1,4 @@
-import { fetchEvents, getLocalIsoString } from "./modules/ics-loader.js";
+import { fetchEvents, getLocalIsoString } from "./modules/event-loader.js";
 import { categorizeEvents, deduplicateRecurringEvents } from "./modules/event-utils.js";
 
 const icsEndpoint  = '/calendar.ics';
