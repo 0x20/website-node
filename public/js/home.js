@@ -61,15 +61,17 @@ async function processEvents(){
         .slice(0, 10);
 
     // Add events to HTML
-    addEvents(document.getElementById('upcomingEvents'), closestFutureEvents);
+    addEvents(document.getElementById('upcomingEvents'), closestFutureEvents, true);
     addEvents(document.getElementById('pastEvents'), recentPastEvents);
 }
 
-function addEvents(target, events) {
+function addEvents(target, events, highlightFirst = false) {
     target.innerHTML = ""; // Clear existing content
-    events.forEach(event => {
+    events.forEach((event, index) => {
         const eventDate = new Date(event.start);
-        const eventHTML = `<colored>${getLocalIsoString(eventDate).split('T')[0]}</colored> - <a href="/events#${event.uid}">${event.summary}</a>
+        const isFirst = highlightFirst && index === 0;
+        const nextLabel = isFirst ? ' <span style="font-weight: bold; color: #fff;">« NEXT</span>' : '';
+        const eventHTML = `<colored>${getLocalIsoString(eventDate).split('T')[0]}</colored> - <a href="/events#${event.uid}">${event.summary}</a>${nextLabel}
 <br>`;
         target.innerHTML += eventHTML;
     });
