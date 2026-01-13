@@ -20,6 +20,32 @@ async function processEvents() {
     addPastEvents(document.getElementById('pastEvents'), pastEvents);
 }
 
+// Render markdown to HTML (sanitized to prevent XSS)
+function renderMarkdown(text) {
+    if (!text) return '';
+    if (typeof marked !== 'undefined' && typeof DOMPurify !== 'undefined') {
+        // Parse markdown with safe defaults
+        const html = marked.parse(text, { async: false });
+        // Sanitize with strict allowlist
+        return DOMPurify.sanitize(html, {
+            ALLOWED_TAGS: ['p', 'br', 'strong', 'em', 'b', 'i', 'u', 'a', 'ul', 'ol', 'li', 'code', 'pre', 'blockquote', 'h1', 'h2', 'h3', 'hr'],
+            ALLOWED_ATTR: ['href', 'target', 'rel'],
+            ALLOW_DATA_ATTR: false,
+            ADD_ATTR: ['rel'],
+            FORCE_BODY: true,
+            // Add noopener noreferrer to all links
+            AFTER_SANITIZE_ATTRIBUTES: function(node) {
+                if (node.tagName === 'A' && node.hasAttribute('href')) {
+                    node.setAttribute('rel', 'noopener noreferrer');
+                    node.setAttribute('target', '_blank');
+                }
+            }
+        });
+    }
+    // Fallback: escape HTML if libraries not loaded
+    return text.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
 // Function to extract image URLs from the description
 function extractImageUrls(description) {
     if(description == null)
@@ -62,8 +88,8 @@ function addPastEvents(target, events) {
                 <div class="mb-3">
                     <colored>${eventStr}</colored> - ${event.summary}
                 </div>
-                <div>
-                    <p style="white-space: pre-line;">${cleanDescription}</p>
+                <div class="event-description">
+                    ${renderMarkdown(cleanDescription)}
                     <div>${imagesHTML}</div>
                 </div>
             </div>`;
@@ -84,13 +110,14 @@ function addFutureEvents(target, events) {
     events.forEach(event => {
         const eventDate = new Date(event.start);
         const eventStr = convertDateToStr(eventDate);
+        const description = event.description ? renderMarkdown(event.description) : "No description available.";
         const eventHTML = `
         <div id=${event.uid} class="framed m-2 tile" style="min-width: 400px;">
             <div class="mb-3">
                 <colored>${eventStr}</colored> - ${event.summary}
             </div>
-            <div>
-                <p>${event.description ?? "No description available."}</p>
+            <div class="event-description">
+                ${description}
             </div>
         </div>`;
 
