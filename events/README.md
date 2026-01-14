@@ -16,13 +16,13 @@ recurring: false
 
 Event description here! You can use **markdown** formatting.
 
-Add images by including URLs in the description:
-https://example.com/image.jpg
+Add images using markdown syntax:
+![Image description](https://example.com/image.jpg)
 
 The description supports:
 - Markdown formatting
-- Links
-- Images (just include the URL)
+- Links: [Link text](https://example.com)
+- Images: ![Alt text](image-url)
 - Multiple paragraphs
 ```
 

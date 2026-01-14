@@ -82,6 +82,15 @@ colored {
 	margin:15px 0px;
 }
 
+/* Event description images */
+.event-description img {
+	max-width: 100%;
+	height: auto;
+	max-height: 400px;
+	margin: 10px 0;
+	border: 1px solid var(--accent);
+}
+
 h1 {
     display: block;
     font-size: 2em;

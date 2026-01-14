@@ -46,15 +46,6 @@ function renderMarkdown(text) {
     return text.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 }
 
-// Function to extract image URLs from the description
-function extractImageUrls(description) {
-    if(description == null)
-        return [];
-    // Match image URLs - either with image extensions or common image hosting patterns
-    const imageRegex = /(https?:\/\/[^\s]+?(?:\.(?:jpg|jpeg|png|gif|webp)|\/\d+\/\d+\?[^\s]*|picsum\.photos[^\s]*))/gi;
-    return description.match(imageRegex) || [];
-}
-
 function addPastEvents(target, events) {
     target.innerHTML = ""; // Clear existing content
     events.forEach(event => {
@@ -65,32 +56,14 @@ function addPastEvents(target, events) {
         const hasDescription = event.description && event.description.trim() !== '';
 
         if (hasDescription) {
-            // Full event card with description and images
-            const images = extractImageUrls(event.description);
-            let imagesHTML = '';
-
-            if (images.length > 0) {
-                images.forEach(url => {
-                    imagesHTML += `<img src="${url}" alt="Event Image" style="height:250px; margin:10px;">`;
-                });
-            }
-
-            // Remove image URLs from description text
-            let cleanDescription = event.description;
-            images.forEach(url => {
-                cleanDescription = cleanDescription.replace(url, '');
-            });
-            // Clean up extra whitespace
-            cleanDescription = cleanDescription.trim().replace(/\n{3,}/g, '\n\n');
-
+            // Full event card with description (markdown handles images automatically)
             const eventHTML = `
             <div id=${event.uid} class="framed mb-5">
                 <div class="mb-3">
                     <colored>${eventStr}</colored> - ${event.summary}
                 </div>
                 <div class="event-description">
-                    ${renderMarkdown(cleanDescription)}
-                    <div>${imagesHTML}</div>
+                    ${renderMarkdown(event.description)}
                 </div>
             </div>`;
             target.innerHTML += eventHTML;
