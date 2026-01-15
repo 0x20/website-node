@@ -51,6 +51,7 @@ function addPastEvents(target, events) {
     events.forEach(event => {
         const eventDate = new Date(event.start);
         const eventStr = getLocalIsoString(eventDate).split('T')[0];
+        const eventId = event.uid.replace(/^md-/, '');
 
         // Check if event has meaningful description
         const hasDescription = event.description && event.description.trim() !== '';
@@ -58,7 +59,7 @@ function addPastEvents(target, events) {
         if (hasDescription) {
             // Full event card with description (markdown handles images automatically)
             const eventHTML = `
-            <div id=${event.uid} class="framed mb-5">
+            <div id="${event.uid}" class="framed mb-5 event-card" style="cursor: pointer;" onclick="window.location.href='/events/${eventId}'">
                 <div class="mb-3">
                     <colored>${eventStr}</colored> - ${event.summary}
                 </div>
@@ -70,7 +71,7 @@ function addPastEvents(target, events) {
         } else {
             // Compact one-liner for events without description
             const eventHTML = `
-            <div id=${event.uid} style="padding: 4px 0;">
+            <div id="${event.uid}" style="padding: 4px 0; cursor: pointer;" onclick="window.location.href='/events/${eventId}'">
                 <colored style="font-size: 0.9em;">${eventStr}</colored> <span style="color: #888; font-size: 0.9em;">- ${event.summary}</span>
             </div>`;
             target.innerHTML += eventHTML;
@@ -84,8 +85,9 @@ function addFutureEvents(target, events) {
         const eventDate = new Date(event.start);
         const eventStr = convertDateToStr(eventDate);
         const description = event.description ? renderMarkdown(event.description) : "No description available.";
+        const eventId = event.uid.replace(/^md-/, '');
         const eventHTML = `
-        <div id=${event.uid} class="framed m-2 tile" style="min-width: 400px;">
+        <div id="${event.uid}" class="framed m-2 tile event-card" style="min-width: 400px; cursor: pointer;" onclick="window.location.href='/events/${eventId}'">
             <div class="mb-3">
                 <colored>${eventStr}</colored> - ${event.summary}
             </div>

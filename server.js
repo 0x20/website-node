@@ -26,76 +26,92 @@ app.get('/contact', (req, res) => {
   res.render('contact', { activePage: 'Visiting / Contact' });
 });
 
-// Parse and serve markdown events from /events folder
-app.get('/api/events.json', async (req, res) => {
-  try {
-    const eventsDir = path.join(__dirname, 'events');
-    const files = await fs.readdir(eventsDir, { recursive: true });
+// Shared function to parse all events
+async function getAllEvents() {
+  const eventsDir = path.join(__dirname, 'events');
+  const files = await fs.readdir(eventsDir, { recursive: true });
+  const mdFiles = files.filter(file =>
+    file.endsWith('.md') && file.toLowerCase() !== 'readme.md'
+  );
 
-    // Filter only .md files (exclude README)
-    const mdFiles = files.filter(file =>
-      file.endsWith('.md') && file.toLowerCase() !== 'readme.md'
-    );
+  const events = [];
 
-    const events = [];
+  for (const file of mdFiles) {
+    const filePath = path.join(eventsDir, file);
+    const fileContent = await fs.readFile(filePath, 'utf8');
+    const { data, content } = matter(fileContent);
 
-    for (const file of mdFiles) {
-      const filePath = path.join(eventsDir, file);
-      const fileContent = await fs.readFile(filePath, 'utf8');
-
-      // Parse frontmatter
-      const { data, content } = matter(fileContent);
-
-      // Validate required fields
-      if (!data.title || !data.date) {
-        console.warn(`Skipping ${file}: missing required fields (title, date)`);
-        continue;
-      }
-
-      // Handle recurring events
-      if (data.recurring && data.recurring !== 'false') {
-        // Generate occurrences for the next 6 months
-        const startDate = new Date(data.date);
-        const endRange = new Date();
-        endRange.setMonth(endRange.getMonth() + 6);
-
-        let currentDate = new Date(startDate);
-        let occurrenceCount = 0;
-
-        while (currentDate <= endRange && occurrenceCount < 52) {
-          events.push({
-            title: data.title,
-            date: currentDate.toISOString(),
-            end: data.end ? new Date(new Date(data.end).getTime() + (currentDate - startDate)).toISOString() : null,
-            description: content.trim(),
-            uid: `md-${file.replace('.md', '')}-${currentDate.getTime()}`,
-            source: 'markdown'
-          });
-
-          // Increment based on recurrence
-          if (data.recurring === 'weekly') {
-            currentDate.setDate(currentDate.getDate() + 7);
-          } else if (data.recurring === 'monthly') {
-            currentDate.setMonth(currentDate.getMonth() + 1);
-          } else {
-            break; // Unknown recurrence type
-          }
-
-          occurrenceCount++;
-        }
-      } else {
-        // One-time event
-        events.push({
-          title: data.title,
-          date: data.date,
-          end: data.end || null,
-          description: content.trim(),
-          uid: `md-${file.replace('.md', '')}`,
-          source: 'markdown'
-        });
-      }
+    if (!data.title || !data.date) {
+      console.warn(`Skipping ${file}: missing required fields (title, date)`);
+      continue;
     }
 
+    if (data.recurring && data.recurring !== 'false') {
+      const startDate = new Date(data.date);
+      const endRange = new Date();
+      endRange.setMonth(endRange.getMonth() + 6);
+      let currentDate = new Date(startDate);
+      let occurrenceCount = 0;
+
+      while (currentDate <= endRange && occurrenceCount < 52) {
+        events.push({
+          title: data.title,
+          date: currentDate.toISOString(),
+          end: data.end ? new Date(new Date(data.end).getTime() + (currentDate - startDate)).toISOString() : null,
+          description: content.trim(),
+          uid: `md-${file.replace('.md', '')}-${currentDate.getTime()}`,
+          source: 'markdown'
+        });
+
+        if (data.recurring === 'weekly') {
+          currentDate.setDate(currentDate.getDate() + 7);
+        } else if (data.recurring === 'monthly') {
+          currentDate.setMonth(currentDate.getMonth() + 1);
+        } else {
+          break;
+        }
+        occurrenceCount++;
+      }
+    } else {
+      events.push({
+        title: data.title,
+        date: data.date,
+        end: data.end || null,
+        description: content.trim(),
+        uid: `md-${file.replace('.md', '')}`,
+        source: 'markdown'
+      });
+    }
+  }
+
+  return events;
+}
+
+// Individual event page
+app.get('/events/:eventId(*)', async (req, res) => {
+  try {
+    const eventId = `md-${req.params.eventId}`;
+    const events = await getAllEvents();
+    const event = events.find(e => e.uid === eventId);
+
+    if (!event) {
+      return res.redirect('/events');
+    }
+
+    res.render('event-detail', {
+      activePage: 'Events',
+      event: event
+    });
+  } catch (error) {
+    console.error('Error loading event:', error);
+    res.redirect('/events');
+  }
+});
+
+// API endpoint for events
+app.get('/api/events.json', async (req, res) => {
+  try {
+    const events = await getAllEvents();
     res.json(events);
   } catch (error) {
     console.error('Error reading markdown events:', error);

@@ -37,7 +37,7 @@ a {
 }
 
 .col,[class*="col-"]{
-	margdin-bottom:25px;
+	margin-bottom:25px;
 }
 
 .wrapper{
@@ -89,6 +89,17 @@ colored {
 	max-height: 400px;
 	margin: 10px 0;
 	border: 1px solid var(--accent);
+}
+
+/* Event card hover effect */
+.event-card {
+	transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.event-card:hover {
+	transform: translateY(-2px);
+	border-color: var(--accent) !important;
+	box-shadow: 0 4px 8px rgba(255, 168, 106, 0.3);
 }
 
 h1 {

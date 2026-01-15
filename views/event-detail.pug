@@ -1,0 +1,61 @@
+doctype html
+html(lang="en")
+  include partials/head
+  body
+    .wrapper
+      include partials/header
+      .container
+        .row.mb-3
+          .col-12
+            a(href="/events" style="color: var(--accent);") ← Back to Events
+
+        .row
+          .col-12
+            article.framed
+              h1= event.title
+              .mb-3
+                colored#event-date
+              #event-content.event-description
+
+        div(style="height:200px;")
+
+    script.
+      // Format and display event date
+      const eventDate = new Date('#{event.date}');
+      const endDate = '#{event.end}' ? new Date('#{event.end}') : null;
+
+      const options = {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit'
+      };
+
+      let formatted = eventDate.toLocaleString('en-GB', options).replace(',', '');
+      if (endDate) {
+        formatted += ' - ' + endDate.toLocaleString('en-GB', { hour: '2-digit', minute: '2-digit' }).replace(',', '');
+      }
+
+      document.getElementById('event-date').textContent = formatted;
+
+      // Render markdown content
+      const markdown = `#{event.description.replace(/`/g, '\\`').replace(/\n/g, '\\n')}`;
+      const contentDiv = document.getElementById('event-content');
+
+      if (typeof marked !== 'undefined' && typeof DOMPurify !== 'undefined') {
+        const html = marked.parse(markdown, { async: false });
+        const sanitized = DOMPurify.sanitize(html, {
+          ALLOWED_TAGS: ['p', 'br', 'strong', 'em', 'b', 'i', 'u', 'a', 'ul', 'ol', 'li', 'code', 'pre', 'blockquote', 'h1', 'h2', 'h3', 'hr', 'img'],
+          ALLOWED_ATTR: ['href', 'target', 'rel', 'src', 'alt', 'title'],
+          AFTER_SANITIZE_ATTRIBUTES: function(node) {
+            if (node.tagName === 'A' && node.hasAttribute('href')) {
+              node.setAttribute('rel', 'noopener noreferrer');
+              node.setAttribute('target', '_blank');
+            }
+          }
+        });
+        contentDiv.innerHTML = sanitized;
+      } else {
+        contentDiv.textContent = markdown;
+      }
