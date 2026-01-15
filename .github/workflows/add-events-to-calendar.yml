@@ -33,7 +33,7 @@ jobs:
     - name: Get changed markdown files
       id: changed-files
       run: |
-        FILES=$(git diff --name-only HEAD^ HEAD | grep '^events/.*\.md$' || true)
+        FILES=$(git diff --name-only HEAD^ HEAD | grep '^events/.*\.md$' | grep -v 'README.md' || true)
         echo "files=$FILES" >> $GITHUB_OUTPUT
         echo "Changed files: $FILES"
 
