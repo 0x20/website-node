@@ -1,7 +1,7 @@
 ---
 title: Meshcore meeting
-date: 2026-01-21T18:30:00.000Z
-end: 2026-01-21T22:59:00.000Z
+date: 2026-01-21T19:30:00+01:00
+end: 2026-01-21T23:59:00+01:00
 ---
 
 # Meshcore meetup

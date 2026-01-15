@@ -38,8 +38,21 @@ Client-side JS modules in `public/js/modules/` handle loading, deduplication, an
 ### Markdown Event Format
 
 Files in `/events/` with YAML frontmatter:
-- Required: `title`, `date` (ISO format)
+                                                                    - Required: `title`, `date` (ISO format with timezone)
 - Optional: `end`, `recurring` (weekly/monthly/false)
+
+**Timezone:** Always include Belgium timezone offset:
+- Winter (late Oct → late Mar): `+01:00` (CET)
+- Summer (late Mar → late Oct): `+02:00` (CEST)
+
+Examples:
+```yaml
+# Winter event (January)
+date: 2026-01-21T19:30:00+01:00
+
+# Summer event (July)
+date: 2026-07-15T20:00:00+02:00
+```
 
 ### Views
 
