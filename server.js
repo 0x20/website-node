@@ -100,7 +100,8 @@ app.get('/events/:eventId(*)', async (req, res) => {
 
     res.render('event-detail', {
       activePage: 'Events',
-      event: event
+      event: event,
+      eventPath: req.params.eventId
     });
   } catch (error) {
     console.error('Error loading event:', error);

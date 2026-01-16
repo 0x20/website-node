@@ -6,8 +6,9 @@ html(lang="en")
       include partials/header
       .container
         .row.mb-3
-          .col-12
+          .col-12.d-flex.justify-content-between.align-items-center
             a(href="/events" style="color: var(--accent);") ← Back to Events
+            a(href=`https://github.com/0x20/website-node/blob/main/events/${eventPath}.md` target="_blank" rel="noopener noreferrer" style="color: var(--accent);") Edit on GitHub →
 
         .row
           .col-12
