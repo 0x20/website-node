@@ -5,8 +5,23 @@ html(lang="en")
     /* Enable horizontal scrolling */
     .scroller {
         display: flex;
-        flex-wrap: nowrap; /* Keep the item in one row */
-        overflow-x: auto;  /* Horizontal scrolling if necessary */
+        flex-wrap: nowrap;
+        overflow-x: auto;
+    }
+    /* Masonry layout */
+    .masonry {
+        column-count: 3;
+        column-gap: 20px;
+    }
+    .masonry > div {
+        break-inside: avoid;
+        margin-bottom: 20px;
+    }
+    @media (max-width: 992px) {
+        .masonry { column-count: 2; }
+    }
+    @media (max-width: 576px) {
+        .masonry { column-count: 1; }
     }
   body
     .wrapper
@@ -24,8 +39,9 @@ html(lang="en")
             | Upcoming events. Title and description
         //- Past events
         .row.mb-5
-          h1 Past Events
-          #pastEvents.notframed
+          .col-12
+            h1 Past Events
+          #pastEvents.masonry
             | Past events with description and pictures
 
         div(style="height:200px;")

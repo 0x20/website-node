@@ -56,26 +56,15 @@ function addPastEvents(target, events) {
         // Check if event has meaningful description
         const hasDescription = event.description && event.description.trim() !== '';
 
-        if (hasDescription) {
-            // Full event card with description (markdown handles images automatically)
-            const eventHTML = `
-            <div id="${event.uid}" class="framed mb-5 event-card" style="cursor: pointer;" onclick="window.location.href='/events/${eventId}'">
-                <div class="mb-3">
-                    <colored>${eventStr}</colored> - ${event.summary}
-                </div>
-                <div class="event-description">
-                    ${renderMarkdown(event.description)}
-                </div>
-            </div>`;
-            target.innerHTML += eventHTML;
-        } else {
-            // Compact one-liner for events without description
-            const eventHTML = `
-            <div id="${event.uid}" style="padding: 4px 0; cursor: pointer;" onclick="window.location.href='/events/${eventId}'">
-                <colored style="font-size: 0.9em;">${eventStr}</colored> <span style="color: #888; font-size: 0.9em;">- ${event.summary}</span>
-            </div>`;
-            target.innerHTML += eventHTML;
-        }
+        // Event card with description
+        const eventHTML = `
+        <div id="${event.uid}" class="framed event-card" style="cursor: pointer;" onclick="window.location.href='/events/${eventId}'">
+            <div class="mb-3">
+                <colored>${eventStr}</colored> - ${event.summary}
+            </div>
+            ${hasDescription ? `<div class="event-description">${renderMarkdown(event.description)}</div>` : ''}
+        </div>`;
+        target.innerHTML += eventHTML;
     });
 }
 
