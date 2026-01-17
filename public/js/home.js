@@ -71,7 +71,8 @@ function addEvents(target, events, highlightFirst = false) {
         const eventDate = new Date(event.start);
         const isFirst = highlightFirst && index === 0;
         const nextLabel = isFirst ? ' <span style="font-weight: bold; color: #fff;">« NEXT</span>' : '';
-        const eventHTML = `<colored>${getLocalIsoString(eventDate).split('T')[0]}</colored> - <a href="/events#${event.uid}">${event.summary}</a>${nextLabel}
+        const eventPath = event.uid.replace(/^md-/, '');
+        const eventHTML = `<colored>${getLocalIsoString(eventDate).split('T')[0]}</colored> - <a href="/events/${eventPath}">${event.summary}</a>${nextLabel}
 <br>`;
         target.innerHTML += eventHTML;
     });
