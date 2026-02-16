@@ -9,3 +9,5 @@ Teus presents his 3D-printed mushroom light and walks us through the design deci
 We’ll reverse engineer the build from the outside in: enclosure design, USB-C power, ESP32 + WLED setup, and the trade-offs between aesthetics and practical constraints.
 
 Discussion welcome.
+
+![Teus mushroom](https://storage.googleapis.com/hackerspace-website/tijs-shroom.jpg)
