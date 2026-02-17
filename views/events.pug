@@ -10,18 +10,24 @@ html(lang="en")
     }
     /* Masonry layout */
     .masonry {
-        column-count: 3;
-        column-gap: 20px;
+        display: flex;
+        gap: 20px;
+        align-items: flex-start;
+        width: 100%;
     }
-    .masonry > div {
-        break-inside: avoid;
-        margin-bottom: 20px;
+    .masonry-col {
+        flex: 1;
+        min-width: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
     }
-    @media (max-width: 992px) {
-        .masonry { column-count: 2; }
+    .masonry-col > * {
+        max-height: 50rem;
+        overflow: hidden;
     }
     @media (max-width: 576px) {
-        .masonry { column-count: 1; }
+        .masonry { flex-direction: column; }
     }
   body
     .wrapper

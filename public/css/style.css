@@ -102,10 +102,10 @@ colored {
 	box-shadow: 0 4px 8px rgba(255, 168, 106, 0.3);
 }
 
-/* Limit future event card height to prevent oversized posts */
+/* Limit future event card height */
 #upcomingEvents .event-card {
 	max-height: 350px;
-	overflow-y: auto;
+	overflow: hidden;
 }
 
 h1 {

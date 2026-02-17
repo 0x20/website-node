@@ -15,6 +15,13 @@ async function processEvents() {
     futureEvents = futureEvents.sort((a, b) => new Date(a.start) - new Date(b.start));
     pastEvents = pastEvents.sort((a, b) => new Date(b.start) - new Date(a.start));
 
+    // Drop recurring events with no custom content (e.g. weekly socials with no description)
+    pastEvents = pastEvents.filter(event => {
+        const isRecurring = /\-\d{10,}$/.test(event.uid);
+        const hasDescription = event.description && event.description.trim() !== '';
+        return !isRecurring || hasDescription;
+    });
+
     // Add events to HTML
     addFutureEvents(document.getElementById('upcomingEvents'), futureEvents);
     addPastEvents(document.getElementById('pastEvents'), pastEvents);
@@ -46,25 +53,36 @@ function renderMarkdown(text) {
     return text.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 }
 
+
 function addPastEvents(target, events) {
-    target.innerHTML = ""; // Clear existing content
-    events.forEach(event => {
+    target.innerHTML = "";
+
+    const colCount = window.innerWidth <= 576 ? 1 : window.innerWidth <= 992 ? 2 : 3;
+    const cols = Array.from({length: colCount}, () => {
+        const col = document.createElement('div');
+        col.className = 'masonry-col';
+        target.appendChild(col);
+        return col;
+    });
+
+    events.forEach((event, i) => {
         const eventDate = new Date(event.start);
         const eventStr = getLocalIsoString(eventDate).split('T')[0];
         const eventId = event.uid.replace(/^md-/, '');
-
-        // Check if event has meaningful description
         const hasDescription = event.description && event.description.trim() !== '';
 
-        // Event card with description
-        const eventHTML = `
-        <div id="${event.uid}" class="framed event-card" style="cursor: pointer;" onclick="window.location.href='/events/${eventId}'">
+        const card = document.createElement('div');
+        card.id = event.uid;
+        card.className = 'framed event-card';
+        card.style.cursor = 'pointer';
+        card.onclick = () => window.location.href = `/events/${eventId}`;
+        card.innerHTML = `
             <div class="mb-3">
                 <colored>${eventStr}</colored> - ${event.summary}
             </div>
-            ${hasDescription ? `<div class="event-description">${renderMarkdown(event.description)}</div>` : ''}
-        </div>`;
-        target.innerHTML += eventHTML;
+            ${hasDescription ? `<div class="event-description">${renderMarkdown(event.description)}</div>` : ''}`;
+
+        cols[i % colCount].appendChild(card);
     });
 }
 
@@ -75,17 +93,20 @@ function addFutureEvents(target, events) {
         const eventStr = convertDateToStr(eventDate);
         const description = event.description ? renderMarkdown(event.description) : "No description available.";
         const eventId = event.uid.replace(/^md-/, '');
-        const eventHTML = `
-        <div id="${event.uid}" class="framed m-2 tile event-card" style="min-width: 400px; cursor: pointer;" onclick="window.location.href='/events/${eventId}'">
+
+        const card = document.createElement('div');
+        card.id = event.uid;
+        card.className = 'framed m-2 tile event-card';
+        card.style.minWidth = '400px';
+        card.style.cursor = 'pointer';
+        card.onclick = () => window.location.href = `/events/${eventId}`;
+        card.innerHTML = `
             <div class="mb-3">
                 <colored>${eventStr}</colored> - ${event.summary}
             </div>
-            <div class="event-description">
-                ${description}
-            </div>
-        </div>`;
+            <div class="event-description">${description}</div>`;
 
-        target.innerHTML += eventHTML;
+        target.appendChild(card);
     });
 }
 
