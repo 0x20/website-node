@@ -4,7 +4,7 @@ on:
   push:
     branches: [ main ]
     paths:
-      - 'events/*.md'
+      - 'events/**/*.md'
 
 jobs:
   add-to-calendar:
@@ -43,6 +43,6 @@ jobs:
         for file in ${{ steps.changed-files.outputs.files }}; do
           if [ -f "$file" ]; then
             echo "Processing $file..."
-            node scripts/calender-add-post-from-md.js "$file"
+            node scripts/calendar-add-post-from-md.js "$file"
           fi
         done
