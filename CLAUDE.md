@@ -39,7 +39,7 @@ Client-side JS modules in `public/js/modules/` handle loading, deduplication, an
 
 Files in `/events/` with YAML frontmatter:
                                                                     - Required: `title`, `date` (ISO format with timezone)
-- Optional: `end`, `recurring` (weekly/monthly/false)
+- Optional: `end`
 
 **Timezone:** Always include Belgium timezone offset:
 - Winter (late Oct → late Mar): `+01:00` (CET)

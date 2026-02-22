@@ -35,7 +35,7 @@ async function exportCalendarToMarkdown() {
     const response = await calendar.events.list({
       calendarId,
       maxResults: 2500,
-      singleEvents: false, // Don't expand recurring events into separate instances
+      singleEvents: true,
     });
 
     const events = response.data.items;
@@ -63,19 +63,9 @@ async function exportCalendarToMarkdown() {
       const end = event.end.dateTime || event.end.date;
       const startDate = new Date(start);
 
-      // Check if this is a recurring event
-      const isRecurring = event.recurrence && event.recurrence.length > 0;
-
-      // Create filename - for recurring events, don't include date
-      let filename;
-      if (isRecurring) {
-        const titleSlug = sanitizeFilename(event.summary || 'untitled');
-        filename = `${titleSlug}.md`;
-      } else {
-        const dateStr = startDate.toISOString().split('T')[0]; // YYYY-MM-DD
-        const titleSlug = sanitizeFilename(event.summary || 'untitled');
-        filename = `${dateStr}-${titleSlug}.md`;
-      }
+      const dateStr = startDate.toISOString().split('T')[0]; // YYYY-MM-DD
+      const titleSlug = sanitizeFilename(event.summary || 'untitled');
+      const filename = `${dateStr}-${titleSlug}.md`;
 
       const filepath = path.join(eventsDir, filename);
 
@@ -95,19 +85,6 @@ async function exportCalendarToMarkdown() {
 
       if (end) {
         frontmatter.push(`end: ${formatDate(end)}`);
-      }
-
-      // Add recurring info if applicable
-      if (isRecurring) {
-        // Check if it's a weekly recurrence (most common pattern)
-        const recurRule = event.recurrence[0];
-        if (recurRule.includes('FREQ=WEEKLY')) {
-          frontmatter.push('recurring: weekly');
-        } else if (recurRule.includes('FREQ=DAILY')) {
-          frontmatter.push('recurring: daily');
-        } else if (recurRule.includes('FREQ=MONTHLY')) {
-          frontmatter.push('recurring: monthly');
-        }
       }
 
       frontmatter.push('---');

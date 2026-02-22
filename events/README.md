@@ -4,7 +4,7 @@ Create events by adding markdown files to this folder! Each event is a markdown 
 
 ## How to add an event
 
-1. Create a new `.md` file in this folder. Name files descriptively, e.g.  `2025-12-20-arduino-workshop.md` and place them in the subfolder created for the current year. 
+1. Create a new `.md` file in this folder. Name files descriptively, e.g.  `2025-12-20-arduino-workshop.md` and place them in the subfolder created for the current year.
 2. Add frontmatter with event details
 3. Write the description
 4. Commit and push!
@@ -16,7 +16,6 @@ Create events by adding markdown files to this folder! Each event is a markdown 
 title: Event Title
 date: 2025-12-19T21:00:00+01:00
 end: 2025-12-19T23:00:00+01:00
-recurring: false
 ---
 
 Event description here! You can use **markdown** formatting.
@@ -36,7 +35,6 @@ The description supports:
 - `title` (required): Event name
 - `date` (required): Start date/time in ISO format with timezone (see below)
 - `end` (optional): End date/time in ISO format with timezone
-- `recurring` (optional): Set to `weekly`, `monthly`, or `false` (default: `false`)
 
 ### Don't forget the timezone
 Always include the Belgium timezone offset at the end of dates:
@@ -70,15 +68,4 @@ end: 2026-07-15T23:00:00+02:00
 ---
 
 Summer BBQ! Bring your own drinks.
-```
-
-### Recurring event:
-```markdown
----
-title: Weekly Social
-date: 2025-12-19T21:00:00+01:00
-recurring: weekly
----
-
-Our weekly Thursday meetup. Everyone welcome!
 ```

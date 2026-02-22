@@ -1,5 +1,5 @@
 import { fetchEvents, getLocalIsoString } from "./modules/event-loader.js";
-import { categorizeEvents, deduplicateRecurringEvents } from "./modules/event-utils.js";
+import { categorizeEvents } from "./modules/event-utils.js";
 
 // Space status banner functionality
 async function updateSpaceStatusBanner() {
@@ -46,9 +46,6 @@ async function processEvents(){
 
     // Categorize events into future and past
     let { futureEvents, pastEvents } = categorizeEvents(events);
-
-    // Deduplicate future events (only show next occurrence of recurring events)
-    futureEvents = deduplicateRecurringEvents(futureEvents);
 
     // Process future events
     const closestFutureEvents = futureEvents

@@ -1,5 +1,5 @@
 import { fetchEvents, getLocalIsoString } from "./modules/event-loader.js";
-import { categorizeEvents, deduplicateRecurringEvents } from "./modules/event-utils.js";
+import { categorizeEvents } from "./modules/event-utils.js";
 
 // Adds events to events page
 async function processEvents() {
@@ -8,19 +8,9 @@ async function processEvents() {
     // Categorize events into future and past
     let { futureEvents, pastEvents } = categorizeEvents(events);
 
-    // Deduplicate future events (only show next occurrence of recurring events)
-    futureEvents = deduplicateRecurringEvents(futureEvents);
-
     // Sort events
     futureEvents = futureEvents.sort((a, b) => new Date(a.start) - new Date(b.start));
     pastEvents = pastEvents.sort((a, b) => new Date(b.start) - new Date(a.start));
-
-    // Drop recurring events with no custom content (e.g. weekly socials with no description)
-    pastEvents = pastEvents.filter(event => {
-        const isRecurring = /\-\d{10,}$/.test(event.uid);
-        const hasDescription = event.description && event.description.trim() !== '';
-        return !isRecurring || hasDescription;
-    });
 
     // Add events to HTML
     addFutureEvents(document.getElementById('upcomingEvents'), futureEvents);

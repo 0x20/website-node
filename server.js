@@ -41,13 +41,13 @@ async function getAllEvents() {
     const fileContent = await fs.readFile(filePath, 'utf8');
     const { data, content } = matter(fileContent);
 
-    if (!data.title || !data.date) {
-      console.warn(`Skipping ${file}: missing required fields (title, date)`);
+    // weekly-social.md has no date — handled separately below
+    if (file.replace(/\\/g, '/') === 'weekly-social.md') {
       continue;
     }
 
-    // Skip recurring event files — we hardcode the next weekly social below
-    if (data.recurring && data.recurring !== 'false') {
+    if (!data.title || !data.date) {
+      console.warn(`Skipping ${file}: missing required fields (title, date)`);
       continue;
     }
 
@@ -61,7 +61,7 @@ async function getAllEvents() {
     });
   }
 
-  // Next weekly social — reads from weekly-social.md but always shows as next Thursday
+  // Weekly social — always shows as next Thursday
   const weeklySocialPath = path.join(eventsDir, 'weekly-social.md');
   try {
     const wsContent = await fs.readFile(weeklySocialPath, 'utf8');

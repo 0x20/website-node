@@ -1,4 +1,4 @@
-export { categorizeEvents, deduplicateRecurringEvents };
+export { categorizeEvents };
 
 /**
  * Categorizes events into future and past
@@ -20,25 +20,4 @@ function categorizeEvents(events) {
     });
 
     return { futureEvents, pastEvents };
-}
-
-/**
- * Deduplicates recurring events - keeps only the next occurrence of each recurring event
- */
-function deduplicateRecurringEvents(events) {
-    const eventsMap = new Map();
-
-    events.forEach(event => {
-        // Extract base UID (recurring events have format: baseuid-timestamp)
-        const baseUid = event.uid.includes('-')
-            ? event.uid.substring(0, event.uid.lastIndexOf('-'))
-            : event.uid;
-
-        // Only keep the earliest occurrence of each recurring event
-        if (!eventsMap.has(baseUid) || new Date(event.start) < new Date(eventsMap.get(baseUid).start)) {
-            eventsMap.set(baseUid, event);
-        }
-    });
-
-    return Array.from(eventsMap.values());
 }
