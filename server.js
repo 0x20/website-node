@@ -46,43 +46,34 @@ async function getAllEvents() {
       continue;
     }
 
+    // Skip recurring event files — we hardcode the next weekly social below
     if (data.recurring && data.recurring !== 'false') {
-      const startDate = new Date(data.date);
-      const endRange = new Date();
-      endRange.setMonth(endRange.getMonth() + 6);
-      let currentDate = new Date(startDate);
-      let occurrenceCount = 0;
-
-      while (currentDate <= endRange && occurrenceCount < 52) {
-        events.push({
-          title: data.title,
-          date: currentDate.toISOString(),
-          end: data.end ? new Date(new Date(data.end).getTime() + (currentDate - startDate)).toISOString() : null,
-          description: content.trim(),
-          uid: `md-${file.replace('.md', '')}-${currentDate.getTime()}`,
-          source: 'markdown'
-        });
-
-        if (data.recurring === 'weekly') {
-          currentDate.setDate(currentDate.getDate() + 7);
-        } else if (data.recurring === 'monthly') {
-          currentDate.setMonth(currentDate.getMonth() + 1);
-        } else {
-          break;
-        }
-        occurrenceCount++;
-      }
-    } else {
-      events.push({
-        title: data.title,
-        date: data.date,
-        end: data.end || null,
-        description: content.trim(),
-        uid: `md-${file.replace('.md', '')}`,
-        source: 'markdown'
-      });
+      continue;
     }
+
+    events.push({
+      title: data.title,
+      date: data.date,
+      end: data.end || null,
+      description: content.trim(),
+      uid: `md-${file.replace('.md', '')}`,
+      source: 'markdown'
+    });
   }
+
+  // Hardcoded next weekly social — always shows the upcoming Thursday at 21:00 CET/CEST
+  const now = new Date();
+  const nextThursday = new Date(now);
+  nextThursday.setDate(now.getDate() + ((4 - now.getDay() + 7) % 7 || 7));
+  nextThursday.setHours(20, 0, 0, 0); // 20:00 UTC = 21:00 CET
+  events.push({
+    title: 'Weekly Social',
+    date: nextThursday.toISOString(),
+    end: null,
+    description: 'Join us every Thursday at 21:00 for our weekly social!\n\nOpen to everyone - members and visitors welcome. Come hang out, work on projects, or just chat.',
+    uid: 'weekly-social-next',
+    source: 'markdown'
+  });
 
   return events;
 }
