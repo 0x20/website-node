@@ -1,7 +1,5 @@
 ---
 title: Weekly Social
-date: 2026-01-08T21:00:00+01:00
-recurring: weekly
 ---
 
 Join us every Thursday at 21:00 for our weekly social!

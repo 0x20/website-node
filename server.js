@@ -56,24 +56,31 @@ async function getAllEvents() {
       date: data.date,
       end: data.end || null,
       description: content.trim(),
-      uid: `md-${file.replace('.md', '')}`,
+      uid: `md-${file.replace('.md', '').replace(/\\/g, '/')}`,
       source: 'markdown'
     });
   }
 
-  // Hardcoded next weekly social — always shows the upcoming Thursday at 21:00 CET/CEST
-  const now = new Date();
-  const nextThursday = new Date(now);
-  nextThursday.setDate(now.getDate() + ((4 - now.getDay() + 7) % 7 || 7));
-  nextThursday.setHours(20, 0, 0, 0); // 20:00 UTC = 21:00 CET
-  events.push({
-    title: 'Weekly Social',
-    date: nextThursday.toISOString(),
-    end: null,
-    description: 'Join us every Thursday at 21:00 for our weekly social!\n\nOpen to everyone - members and visitors welcome. Come hang out, work on projects, or just chat.',
-    uid: 'weekly-social-next',
-    source: 'markdown'
-  });
+  // Next weekly social — reads from weekly-social.md but always shows as next Thursday
+  const weeklySocialPath = path.join(eventsDir, 'weekly-social.md');
+  try {
+    const wsContent = await fs.readFile(weeklySocialPath, 'utf8');
+    const { data: wsData, content: wsBody } = matter(wsContent);
+    const now = new Date();
+    const nextThursday = new Date(now);
+    nextThursday.setDate(now.getDate() + ((4 - now.getDay() + 7) % 7 || 7));
+    nextThursday.setHours(20, 0, 0, 0); // 20:00 UTC = 21:00 CET
+    events.push({
+      title: wsData.title || 'Weekly Social',
+      date: nextThursday.toISOString(),
+      end: null,
+      description: wsBody.trim(),
+      uid: 'weekly-social-next',
+      source: 'markdown'
+    });
+  } catch (e) {
+    // weekly-social.md missing, skip
+  }
 
   return events;
 }
@@ -81,9 +88,9 @@ async function getAllEvents() {
 // Individual event page
 app.get('/events/:eventId(*)', async (req, res) => {
   try {
-    const eventId = `md-${req.params.eventId}`;
+    const rawId = req.params.eventId;
     const events = await getAllEvents();
-    const event = events.find(e => e.uid === eventId);
+    const event = events.find(e => e.uid === `md-${rawId}` || e.uid === rawId);
 
     if (!event) {
       return res.redirect('/events');
