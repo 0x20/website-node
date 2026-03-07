@@ -4,7 +4,7 @@ Website for Hackerspace Gent (0x20).
 
 ## Events
 
-Events are managed via markdown files in `/events/` with YAML frontmatter. Anyone can add events via Pull Request - see `/events/README.md` for the format.
+Events are managed via markdown files in `/events/` with YAML frontmatter. Anyone can add events via Pull Request - see [/events/README.md](https://github.com/0x20/website-node/blob/main/events/README.md) for the format.
 
 ## Development
 
