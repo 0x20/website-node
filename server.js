@@ -26,6 +26,10 @@ app.get('/contact', (req, res) => {
   res.render('contact', { activePage: 'Visiting / Contact' });
 });
 
+app.get('/event-list', (req, res) => {
+  res.render('event-list');
+});
+
 // Shared function to parse all events
 async function getAllEvents() {
   const eventsDir = path.join(__dirname, 'events');
