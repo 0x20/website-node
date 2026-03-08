@@ -1,0 +1,50 @@
+doctype html
+html(lang="en")
+  include partials/head
+  body
+    .wrapper
+      include partials/header
+      .container
+        .row.mb-4
+          .col-12
+            h1 Press Kit
+            p
+              | Hackerspace Gent (0x20) is a community-run hackerspace in Ghent, Belgium.
+              | We are a non-profit association of makers, engineers, artists, and curious minds
+              | who share a physical space to collaborate, learn, and build things together.
+              br
+              br
+              | For press inquiries: #[a(href="mailto:info@hackerspace.gent") info@hackerspace.gent]
+
+        h2 Logos
+        .row.mb-5
+          .col-xl-3.col-md-6.col-12.mb-3
+            .framed.text-center.p-3
+              img.img-fluid.mb-3(src="/images/0x20i.png" alt="0x20 Logo" style="max-height: 140px;")
+              small.d-block.mb-2 Flappers only.
+              a.btn(href="/images/0x20i.png" download) Download PNG
+          .col-xl-3.col-md-6.col-12.mb-3
+            .framed.text-center.p-3
+              img.img-fluid.mb-3(src="/images/0x20white.png" alt="0x20 Logo White" style="max-height: 140px;")
+              small.d-block.mb-2 Full ring logo.
+              a.btn(href="/images/0x20white.png" download) Download PNG
+
+
+        h2 Newline Posters
+        p
+          | Posters from #[a(href="https://newline.gent") Newline], our annual event.
+        .row.mb-5
+          .col-xl-3.col-md-6.col-12.mb-3
+            .framed.p-2
+              img.img-fluid.mb-2(src="https://newline.gent/poster/poster2026.png" alt="Newline 2026 poster (color)")
+              small.d-block Newline 2026 — Color
+              .mt-2
+                a.btn.me-2(href="https://newline.gent/poster/poster2026.png" target="_blank") PNG
+                a.btn(href="https://newline.gent/poster/poster2026.pdf" target="_blank") PDF
+          .col-xl-3.col-md-6.col-12.mb-3
+            .framed.p-2
+              img.img-fluid.mb-2(src="https://newline.gent/poster/poster2026bw.png" alt="Newline 2026 poster (B&W)")
+              small.d-block Newline 2026 — B&W
+              .mt-2
+                a.btn.me-2(href="https://newline.gent/poster/poster2026bw.png" target="_blank") PNG
+                a.btn(href="https://newline.gent/poster/poster2026bw.pdf" target="_blank") PDF

@@ -26,6 +26,10 @@ app.get('/contact', (req, res) => {
   res.render('contact', { activePage: 'Visiting / Contact' });
 });
 
+app.get('/presskit', (req, res) => {
+  res.render('presskit', { activePage: 'Press Kit' });
+});
+
 app.get('/event-list', (req, res) => {
   res.render('event-list');
 });

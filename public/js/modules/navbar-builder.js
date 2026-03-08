@@ -5,6 +5,7 @@ const pages = {
     "Newline": "https://newline.gent/",
     "Events": "/events",
     "Visiting / Contact": "/contact",
+    "Press Kit": "/presskit",
 };
 
 function createNavbar() {
