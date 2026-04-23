@@ -2,6 +2,24 @@ doctype html
 html(lang="en")
   include partials/head
   body
+    #newline-popup.newline-popup.hidden(aria-hidden="true")
+      .newline-popup__backdrop
+      .newline-popup__dialog(role="dialog" aria-labelledby="newline-popup-title")
+        .newline-popup__floaters
+          img.newline-float.newline-float--1(src="https://newline.gent/img/icons/drone.png" alt="")
+          img.newline-float.newline-float--2(src="https://newline.gent/img/icons/3d.png" alt="")
+          img.newline-float.newline-float--3(src="https://newline.gent/img/icons/gamecontroller.png" alt="")
+          img.newline-float.newline-float--4(src="https://newline.gent/img/icons/solderiron.png" alt="")
+          img.newline-float.newline-float--5(src="https://newline.gent/img/icons/shroom.png" alt="")
+        button.newline-popup__close(type="button" aria-label="Close") ×
+        img.newline-popup__logo(src="https://newline.gent/img/header.png" alt="Newline 2026" id="newline-popup-title")
+        p.newline-popup__date 29 – 30 – 31 May 2026
+        p.newline-popup__location Hackerspace Gent, Belgium
+        p.newline-popup__description
+          | NewLine is back for its 2026 edition! Join us for three days of creativity, technology and community at Hackerspace Gent.
+        .newline-popup__buttons
+          a.newline-popup__cta.newline-popup__cta--primary(href="https://newline.gent/" target="_blank" rel="noopener") Learn more
+          a.newline-popup__cta.newline-popup__cta--secondary(href="https://cfp.hackerspace.gent" target="_blank" rel="noopener") Submit a talk
     #space-open-banner.space-open-banner.hidden
       .banner-content
         span.banner-text SPACE IS OPEN /// SPACE IS OPEN /// SPACE IS OPEN /// SPACE IS OPEN /// SPACE IS OPEN /// SPACE IS OPEN /// SPACE IS OPEN /// SPACE IS OPEN /// SPACE IS OPEN /// SPACE IS OPEN /// SPACE IS OPEN /// SPACE IS OPEN /// SPACE IS OPEN /// SPACE IS OPEN /// SPACE IS OPEN /// SPACE IS OPEN ///

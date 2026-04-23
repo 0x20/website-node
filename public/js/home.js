@@ -1,6 +1,25 @@
 import { fetchEvents, getLocalIsoString } from "./modules/event-loader.js";
 import { categorizeEvents } from "./modules/event-utils.js";
 
+// Newline popup
+const NEWLINE_POPUP_KEY = 'newline-popup-dismissed-2026-v2';
+
+function initNewlinePopup() {
+    const popup = document.getElementById('newline-popup');
+    if (!popup) return;
+
+    if (localStorage.getItem(NEWLINE_POPUP_KEY) === '1') return;
+
+    popup.classList.remove('hidden');
+
+    popup.querySelector('.newline-popup__close').addEventListener('click', () => {
+        popup.classList.add('hidden');
+        localStorage.setItem(NEWLINE_POPUP_KEY, '1');
+    });
+}
+
+initNewlinePopup();
+
 // Space status banner functionality
 async function updateSpaceStatusBanner() {
     const banner = document.getElementById('space-open-banner');
