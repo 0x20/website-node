@@ -1,4 +1,4 @@
-/* Newline popup — delete this file after Newline 2026 */
+/* Newline popup + permanent banner — delete this file after Newline 2026 */
 @font-face {
     font-family: "Brother";
     src: url("/fonts/brother-bold.ttf") format("truetype");
@@ -230,5 +230,87 @@
     .newline-float {
         animation: none !important;
         transition: none !important;
+    }
+}
+
+/* Permanent Newline banner on homepage */
+.newline-banner {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    padding: 1.25rem 1.75rem;
+    margin: 1.5rem 0 1rem;
+    background: linear-gradient(90deg, #ff5a6e 0%, #ff7a58 35%, #ffa048 70%, #ffb640 100%);
+    border: none !important;
+    border-radius: 16px;
+    color: #fff5e6;
+    text-decoration: none;
+    box-shadow: 0 4px 20px rgba(255, 90, 110, 0.25);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    font-family: "Space Grotesk", -apple-system, BlinkMacSystemFont, "Segoe UI", "Arial", sans-serif;
+}
+
+.newline-banner:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 25px rgba(255, 90, 110, 0.4);
+    color: #fff5e6;
+}
+
+.newline-banner__logo {
+    width: clamp(140px, 18vw, 200px);
+    height: auto;
+    flex-shrink: 0;
+}
+
+.newline-banner__info {
+    flex: 1;
+    min-width: 0;
+}
+
+.newline-banner__date {
+    font-family: "Brother", sans-serif;
+    font-size: clamp(1.1rem, 2.5vw, 1.5rem);
+    font-weight: bold;
+    text-transform: uppercase;
+    color: #fff5e6;
+    margin: 0;
+    line-height: 1.1;
+}
+
+.newline-banner__location {
+    font-family: "Brother", sans-serif;
+    font-size: clamp(0.9rem, 2vw, 1.1rem);
+    font-weight: bold;
+    text-transform: uppercase;
+    color: #fff5e6;
+    margin: 0.35rem 0 0;
+    opacity: 0.9;
+    line-height: 1.1;
+}
+
+.newline-banner__cta {
+    font-family: "Brother", sans-serif;
+    font-size: clamp(0.95rem, 2vw, 1.1rem);
+    font-weight: bold;
+    text-transform: uppercase;
+    padding: 0.7rem 1.4rem;
+    background: rgba(255, 255, 255, 0.95);
+    color: #ff5a6e;
+    border-radius: 50px;
+    flex-shrink: 0;
+    white-space: nowrap;
+    transition: background 0.2s ease;
+}
+
+.newline-banner:hover .newline-banner__cta {
+    background: #fff5e6;
+}
+
+@media (max-width: 600px) {
+    .newline-banner {
+        flex-direction: column;
+        text-align: center;
+        gap: 0.75rem;
+        padding: 1.25rem;
     }
 }
