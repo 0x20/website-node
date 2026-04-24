@@ -13,6 +13,14 @@ app.set('views', path.join(__dirname, 'views'));
 // Serve static files
 app.use(express.static(path.join(__dirname, 'public')));
 
+// Serve project-adjacent assets (images etc.) colocated with their markdown.
+// Falls through to route handlers when the requested file doesn't exist.
+app.use('/projects', express.static(path.join(__dirname, 'projects'), {
+  extensions: false,
+  index: false,
+  redirect: false,
+}));
+
 // Routes
 app.get('/', (req, res) => {
   res.render('index', { activePage: 'Home' });
