@@ -1,8 +1,8 @@
 ---
 title: Canvas project
 author: Miker
-image: https://example.com/led-cube.jpg
-link: https://github.com/you/led-cube
+image: https://hackerspace.gent/projects/IMG_20260424_025329496.jpg
+link: https://github.com/0x20/canvas-hsg
 tags: [raspberrypi, audio]
 status: finished
 ---
