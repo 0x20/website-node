@@ -1,0 +1,11 @@
+---
+title: Canvas project
+author: Miker
+image: https://example.com/led-cube.jpg
+link: https://github.com/you/led-cube
+tags: [raspberrypi, audio]
+status: finished
+---
+
+Idea: have a multimedia manager which runs on a raspberry pi + audio hat, so we can play high quality music using spotify, internet radio streams and the sendspin protocol.
+The video output of the pi shows current playing album art (spotify), youtube movies or announcements pushed by our Home Assistant instance.
