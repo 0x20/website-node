@@ -1,7 +1,7 @@
 const express = require('express');
 const path = require('path');
-const fs = require('fs').promises;
-const matter = require('gray-matter');
+const { getAllEvents } = require('./lib/events');
+const { getAllProjects } = require('./lib/projects');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -30,68 +30,13 @@ app.get('/presskit', (req, res) => {
   res.render('presskit', { activePage: 'Press Kit' });
 });
 
+app.get('/projects', (req, res) => {
+  res.render('projects', { activePage: 'Projects' });
+});
+
 app.get('/event-list', (req, res) => {
   res.render('event-list');
 });
-
-// Shared function to parse all events
-async function getAllEvents() {
-  const eventsDir = path.join(__dirname, 'events');
-  const files = await fs.readdir(eventsDir, { recursive: true });
-  const mdFiles = files.filter(file =>
-    file.endsWith('.md') && file.toLowerCase() !== 'readme.md'
-  );
-
-  const events = [];
-
-  for (const file of mdFiles) {
-    const filePath = path.join(eventsDir, file);
-    const fileContent = await fs.readFile(filePath, 'utf8');
-    const { data, content } = matter(fileContent);
-
-    // weekly-social.md has no date — handled separately below
-    if (file.replace(/\\/g, '/') === 'weekly-social.md') {
-      continue;
-    }
-
-    if (!data.title || !data.date) {
-      console.warn(`Skipping ${file}: missing required fields (title, date)`);
-      continue;
-    }
-
-    events.push({
-      title: data.title,
-      date: data.date,
-      end: data.end || null,
-      description: content.trim(),
-      uid: `md-${file.replace('.md', '').replace(/\\/g, '/')}`,
-      source: 'markdown'
-    });
-  }
-
-  // Weekly social — always shows as next Thursday
-  const weeklySocialPath = path.join(eventsDir, 'weekly-social.md');
-  try {
-    const wsContent = await fs.readFile(weeklySocialPath, 'utf8');
-    const { data: wsData, content: wsBody } = matter(wsContent);
-    const now = new Date();
-    const nextThursday = new Date(now);
-    nextThursday.setDate(now.getDate() + ((4 - now.getDay() + 7) % 7 || 7));
-    nextThursday.setHours(20, 0, 0, 0); // 20:00 UTC = 21:00 CET
-    events.push({
-      title: wsData.title || 'Weekly Social',
-      date: nextThursday.toISOString(),
-      end: null,
-      description: wsBody.trim(),
-      uid: 'weekly-social-next',
-      source: 'markdown'
-    });
-  } catch (e) {
-    // weekly-social.md missing, skip
-  }
-
-  return events;
-}
 
 // Individual event page
 app.get('/events/:eventId(*)', async (req, res) => {
@@ -123,6 +68,39 @@ app.get('/api/events.json', async (req, res) => {
   } catch (error) {
     console.error('Error reading markdown events:', error);
     res.status(500).json({ error: 'Failed to load markdown events' });
+  }
+});
+
+// Individual project page
+app.get('/projects/:projectId(*)', async (req, res) => {
+  try {
+    const rawId = req.params.projectId;
+    const projects = await getAllProjects();
+    const project = projects.find(p => p.uid === `md-${rawId}` || p.uid === rawId);
+
+    if (!project) {
+      return res.redirect('/projects');
+    }
+
+    res.render('project-detail', {
+      activePage: 'Projects',
+      project: project,
+      projectPath: req.params.projectId
+    });
+  } catch (error) {
+    console.error('Error loading project:', error);
+    res.redirect('/projects');
+  }
+});
+
+// API endpoint for projects
+app.get('/api/projects.json', async (req, res) => {
+  try {
+    const projects = await getAllProjects();
+    res.json(projects);
+  } catch (error) {
+    console.error('Error reading markdown projects:', error);
+    res.status(500).json({ error: 'Failed to load markdown projects' });
   }
 });
 

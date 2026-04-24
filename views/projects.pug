@@ -1,0 +1,19 @@
+doctype html
+html(lang="en")
+  include partials/head
+  body
+    .wrapper
+      include partials/header
+      .container
+        .row.mb-3
+          .col-12
+            h1 Projects
+            p
+              | Things built by and at Hackerspace Gent.
+              | Want to show off your own project? Create a markdown file in the #[code /projects/] folder and submit a PR. See the #[a(href="https://github.com/0x20/website-node/blob/main/projects/README.md" target="_blank") projects README] for the format.
+
+        #projectGrid.row
+          //- Project cards injected here
+
+        div(style="height:200px;")
+    script(type="module" src="/js/projects.js")

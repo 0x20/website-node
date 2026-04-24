@@ -35,6 +35,10 @@ Events are served from **Markdown files** via `/api/events.json`, parsed in `ser
 
 Client-side JS modules in `public/js/modules/` handle loading, deduplication, and categorization of events.
 
+### Projects System
+
+Same pattern as events: markdown files in `/projects/` with YAML frontmatter, parsed server-side, exposed via `/api/projects.json`, rendered by `public/js/projects.js` on `/projects` and `views/project-detail.pug` on `/projects/:id`. Only `title` is required; see `/projects/README.md` for the full field list.
+
 ### Markdown Event Format
 
 Files in `/events/` with YAML frontmatter:
