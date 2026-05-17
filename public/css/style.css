@@ -72,6 +72,23 @@ code,highlight {
     margin: 0 2px;
     font-size: .95rem
 }
+
+pre {
+    background: #1b1f23;
+    border: 1px solid rgba(255,168,106,0.3);
+    display: inline-block;
+    max-width: 100%;
+    padding: 12px;
+    overflow-x: auto;
+}
+
+pre code {
+    background: transparent;
+    color: inherit;
+    padding: 0;
+    margin: 0;
+}
+
 colored {
 	color: var(--accent);
 }
@@ -86,9 +103,8 @@ colored {
 .event-description img {
 	max-width: 100%;
 	height: auto;
-	max-height: 400px;
+	max-height: 650px;
 	margin: 10px 0;
-	border: 1px solid var(--accent);
 }
 
 /* Event card hover effect */
@@ -225,8 +241,13 @@ a.active {
 }
 
 .project-detail-image {
+    width: auto;
+    max-width: 100%;
     height: auto;
-    max-height: 400px;
+    max-height: 650px;
+    object-fit: contain;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .project-meta {
