@@ -35,7 +35,7 @@ html(lang="en")
         div(style="height:200px;")
 
     script.
-      const markdown = `#{project.description.replace(/`/g, '\\`').replace(/\n/g, '\\n')}`;
+      const markdown = !{JSON.stringify(project.description).replace(/</g, '\\u003c')};
       const contentDiv = document.getElementById('project-content');
 
       if (typeof marked !== 'undefined' && typeof DOMPurify !== 'undefined') {
