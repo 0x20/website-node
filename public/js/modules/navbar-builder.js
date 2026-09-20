@@ -2,7 +2,6 @@ export { createNavbar };
 
 const pages = {
     "Home": "/",
-    "Newline": "https://newline.gent/",
     "Events": "/events",
     "Projects": "/projects",
     "Visiting / Contact": "/contact",
